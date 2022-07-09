@@ -17,3 +17,17 @@ command: Determins which process the doGet method will run once the fetch is att
 dataBase: The id of the spreadsheet you want to use as a database
 table: The name of the table on string form
 queryString: The sql string request you want to perform (This value must contain the format used on they query documentation for google sheets) https://support.google.com/docs/answer/3093343?hl=en
+
+## Mutations
+
+Mutations require the user to make a fetch request using a post method. Which will contain the following options for the body to use.  
+primaryKey: The primarykey of the row you want to edit
+dataBase: The id of the spreadsheet you want to use as a database in string format
+table: The name of the table you want to edit, create or delete in string form
+command: The command you want to use
+data: The data you want to use to modify a range. Type: number or string or array 
+column: Used to edit a single column of a given row
+headers: Values to be used as headers on a newly created table
+ 
+ 
+ ### Commands
