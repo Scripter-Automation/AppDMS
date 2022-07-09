@@ -4,6 +4,7 @@ Createing a database management system for google app scripts. The intention of 
 
 # Important!
 Spreadsheet = Database 
+
 Sheet = Table
 
 Databsaes are selected by passing the ID as a query parameter on the fetch url
@@ -31,3 +32,15 @@ headers: Values to be used as headers on a newly created table
  
  
  ### Commands
+ 
+ create: Creates a row, with the given data you provide. This function requires a database Id, a table name and the data .Data must be passed as an array 
+ 
+ updateValue: selects a given cell an changes its value. This function requires a database Id, a table name, a primarykey, the data and a column, data can't be on array format
+ 
+ updateRow: Does the same thing as updateValue but with an entire row, data must be on array format
+ 
+ deleteRow: deletes a given row. Requires the database Id, the table name, the primary key of the row you want to delete
+ 
+ createTable: creates a table with a given name on a given database. Requires the database Id, the table name and the headers as an array of strings
+ 
+ dropTable: Drops a given table on a given database. Requires the database Id and the table name
