@@ -1,6 +1,5 @@
 
 
-
 function ParseSheet(ID, sheet){
     const ss = SpreadsheetApp.openById(ID);
     const ws = ss.getSheetByName(sheet);
@@ -20,6 +19,27 @@ function ParseSheet(ID, sheet){
   return jsonArray
 
 }
+
+function ParseSheetByDatabase(Database, sheet){
+  const ss = Database
+  const ws = ss.getSheetByName(sheet);
+  const data = ws.getRange("A1").getDataRegion().getValues();
+  const headers = data.shift();
+
+  const jsonArray = data.map(r =>{
+    let obj =  { }
+    headers.forEach((h,i) =>{
+      obj[h] = r[i];
+    });
+    
+    return obj
+    
+  });
+
+return jsonArray
+
+}
+
 
 function Query(DataBase,value, sheet, col) {
 
