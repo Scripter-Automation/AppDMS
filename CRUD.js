@@ -5,6 +5,7 @@ function CreateDatabase(name){
     const DatabaseId = SpreadsheetApp.create(name).getId()
   
     const Database = DriveApp.getFileById(DatabaseId)
+    Database.insertSheet("Main")
     const system = DriveApp.getFolderById(Settings.systemId).addFile(Database)
     const res = AddToDatabaseList(name) 
     
