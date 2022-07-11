@@ -43,7 +43,11 @@ const Settings ={
       Databases.insertRowBefore(2)
       Databases.getRange(2,1,1,2).setValues([["Settings", DMS.DMSSettingsId]])
 
-  
+    res = {success, msg: "AppDMS Initialized succesfully"}
+
+    Logger.log(res)
+
+    return res
 
   
   }
