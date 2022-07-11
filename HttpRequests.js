@@ -1,23 +1,35 @@
+
+
 function doGet(e){
 
     
     let res;
     const req =  e.parameter;
     const queryString = req.query;
-    const command = req.comand;
+    const command = req.command;
     const table = req.table;
-    const DataBase = ParseDatabaseSelector(req.dataBase)
+    const DataBase = ParseDatabaseByName(req.dataBase)
+
+    const APIKey = req.APIKey
+    
+    if(!parseAPIKey(APIKey)){
+
+        res = {error, msg: "APIKey no es correcto"}
+        
+        return ContentService.createTextOutput(JSON.stringify(res)).setMimeType(ContentService.MimeType.JSON);
+    }
 
     if(command === "Query"){
         DataBase.getSheetByName("Main").getRange("A1")
         .setFormula(`=Query(${table}!1:${Main.getLastRow()}, ${queryString},1)`);
     }
 
-    res = ParseSheet("1buJZDU3yvbx8-yuQKuzXQDPX4ivD6M0kE8rEvnXJ0a4", "Main");
+    res = ParseSheetByDatabase(DataBase, "Main");
 
     
 
-    return res
+    return ContentService.createTextOutput(JSON.stringify(res)).setMimeType(ContentService.MimeType.JSON);
+
 
 }
 
@@ -38,7 +50,7 @@ function doPost(e){
 
 
     const PrimaryKey = req.primaryKey
-    const DataBase = ParseDatabaseSelector(req.dataBase)
+    const DataBase = ParseDatabaseByName(req.dataBase)
     const DataBaseName = req.dataBase
     const command = req.command
     const table = req.table
@@ -49,7 +61,7 @@ function doPost(e){
 
     
     switch(command){
-        case "create":
+        case "insert":
 
             res = createRow(DataBase ,table,data)
 
@@ -66,7 +78,7 @@ function doPost(e){
 
         break;
 
-        case "deleteRow":
+        case "dropRow":
 
             res = dropRow(DataBase, table, PrimaryKey)
 
