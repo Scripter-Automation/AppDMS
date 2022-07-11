@@ -1,6 +1,8 @@
 
-function ParseSheet(DataBase, sheet){
-    const ss = DataBase
+
+
+function ParseSheet(ID, sheet){
+    const ss = SpreadsheetApp.openById(ID);
     const ws = ss.getSheetByName(sheet);
     const data = ws.getRange("A1").getDataRegion().getValues();
     const headers = data.shift();
@@ -33,67 +35,92 @@ function Query(DataBase,value, sheet, col) {
   return row
 }
 
+function generateAPIKey(length){
 
+    const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+
+    let result = ' ';
+    const charactersLength = characters.length;
+    for ( let i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+
+    return result;
+
+
+}
 
 function ParseDatabaseSelector(database){
   return SpreadsheetApp.openById(database)
 }
 
-function createRow(DataBase, table, data){
 
-  DataBase.getSheetByName(table).insertRowAfter(2);
-  DataBase.getSheetByName(table).getRange(2,1,1,data.lenght).setValues([[...data]]);
+function ParseDatabaseByName(name){
 
-  return {sucess:true, error:null, msg:"Data Inserted"}
+  const id = Settings.DataBases.forEach((valuePair)=>{
 
-}
+    let res;
 
-function updateValue(DataBase, table, id, data, col){
+    if(valuePair.Database == name){
+      res = SettingKey.Id
+      return res
+    }
 
-  const row = Query(DataBase,id, table, col);
+  })
 
-  DataBase.getSheetByName(table).getRange(row,col).setValue(data);
+  if(id == undefined | id == null){
+    return {error, msg: "Base de datos no encontrada"}
+  }
 
-  return {success: true, error: null, msg:"Value Updated"}
-
-}
-
-function updateRow(DataBase, table, id, data){
-
-  const row = Query(DataBase, id, table, 0);
-
-  const sheet = DataBase.getSheetByName(table);
-
-  sheet.getRange(row,1,1, data.lenght).setValues([[...data]]);
-
-  return {success: true, error: null, msg:"Row Updated"}
+  return SpreadsheetApp.openById(id)
 
 }
 
-function dropRow(DataBase, table, id){
+function ParseDMSSettingsByKey(key){
 
-  const row = Query(DataBase, id, table, 0);
+  const id =  Settings.parsedSettings.forEach((valuePair)=>{
+    
+    let res;
 
-  DataBase.getSheetByName(table).deleteRow(row);
+    if(valuePair.Key == key){
+      res = SettingKey.Value
+      return res
+    }
 
-  return {success: true, error:null, msg:"Row Deleted"}
+  })
 
-}
-
-function createTable(DataBase, table, headers){
-
-  const newTable = DataBase.insertSheet(table);
-
-  newTable.getRange(1,1,1,headers.lenght).setValues([[...headers]]);
-
-  return {success: true, error:null, msg:"Table Created"}
+  return SpreadsheetApp.openById(id)
 
 }
 
-function dropTable(DataBase, table){
+
+function AddToDatabaseList(name){
+
+  let res
+
+  const newDatabase = CreateDatabase(name);
+
   
 
-  const sheet = DataBase.getSheetByName(table);
-  DataBase.deleteSheet(sheet);
+  res = createRow(DataBaseManagementSystem, "Databases",[name,newDatabase.Database.getId()])
+
+  return res
+
+}
+
+
+function RemoveFromDatabaseList(name){
+
+  let res
+
+  res = dropRow(DataBaseManagementSystem, "Databases", name)
+
+  if(res.error){
+    return {error, msg: "Error while removing database from list" , cause: res.msg }
+  }
+
+  return res
+
 
 }
